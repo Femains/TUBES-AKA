@@ -1,0 +1,95 @@
+import pandas as pd
+import time
+import timeit
+import matplotlib.pyplot as plt
+
+# Data parkiran di Mall
+data = {
+    "NAMA PARKIRAN": [
+        "Parkir Utara", "Parkir Selatan", "Parkir VIP", "Parkir Barat",
+        "Parkir Timur", "Parkir Basement 1", "Parkir Basement 2", "Parkir Atap",
+        "Parkir Premium", "Parkir Ekonomi", "Parkir Khusus Motor", "Parkir Umum",
+        "Parkir Karyawan", "Parkir Tamu"
+    ],
+    "JENIS": [
+        "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL",
+        "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL", "MOBIL"
+    ],
+    "PERIODE": [
+        "PER JAM", "PER JAM", "PER JAM", "PER JAM", "PER JAM", "PER JAM",
+        "PER HARI", "PER JAM", "PER HARI", "PER HARI", "PER JAM", "PER JAM",
+        "PER HARI", "PER JAM"
+    ],
+    "TARIF HARIAN": [
+        "-", "-", "-", "-", "-", "-", "50.000", "-", "75.000", "20.000",
+        "-", "-", "25.000", "-"
+    ],
+    "TARIF JAM": [
+        "5.000", "4.000", "10.000", "3.000", "4.000", "6.000", "-", "4.500",
+        "-", "-", "3.000", "3.500", "-", "2.500"
+    ]
+}
+
+# Membuat DataFrame
+df = pd.DataFrame(data)
+
+# Konversi tarif menjadi numerik
+def convert_tarif(row):
+    if row["PERIODE"] == "PER JAM":
+        return int(row["TARIF JAM"].replace('.', ''))
+    elif row["PERIODE"] == "PER HARI":
+        return int(row["TARIF HARIAN"].replace('.', '')) // 24
+    return 0
+
+df["TARIF"] = df.apply(convert_tarif, axis=1)
+
+# Fungsi Selection Sort Iteratif
+def selection_sort_iterative(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+
+# Fungsi Selection Sort Rekursif
+def selection_sort_recursive(arr, n=None, index=0):
+    if n is None:
+        n = len(arr)
+    if index == n - 1:
+        return arr
+    min_idx = index
+    for j in range(index + 1, n):
+        if arr[j] < arr[min_idx]:
+            min_idx = j
+    arr[index], arr[min_idx] = arr[min_idx], arr[index]
+    return selection_sort_recursive(arr, n, index + 1)
+
+# Mengulang pengukuran waktu eksekusi beberapa kali dengan timeit
+def measure_time_timeit(func, data, repetitions=50):
+    setup_code = f"from __main__ import {func.__name__}"
+    stmt_code = f"{func.__name__}({data})"
+    times = timeit.repeat(stmt=stmt_code, setup=setup_code, repeat=repetitions, number=1)
+    return sum(times) / len(times)
+
+# Pengukuran waktu untuk iteratif dan rekursif
+avg_time_iteratif = measure_time_timeit(selection_sort_iterative, df['TARIF'].tolist())
+avg_time_rekursif = measure_time_timeit(selection_sort_recursive, df['TARIF'].tolist())
+
+# Mengurutkan tarif menggunakan kedua metode
+sorted_tarif_iteratif = selection_sort_iterative(df['TARIF'].tolist())
+sorted_tarif_rekursif = selection_sort_recursive(df['TARIF'].tolist())
+
+# Menambahkan kolom tarif terurut ke DataFrame
+df['TARIF TERURUT ITERATIF'] = sorted_tarif_iteratif
+df['TARIF TERURUT REKURSIF'] = sorted_tarif_rekursif
+
+# Menampilkan DataFrame dengan tarif terurut
+df_sorted = df[['NAMA PARKIRAN', 'JENIS', 'PERIODE',
+                'TARIF HARIAN', 'TARIF JAM', 'TARIF',
+                'TARIF TERURUT ITERATIF', 'TARIF TERURUT REKURSIF']]
+
+print("\nData Parkiran dengan Tarif Terurut:")
+print(df_sorted.to_string(index=False))
