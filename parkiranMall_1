@@ -1,3 +1,5 @@
+# BARIS KE-1
+
 import pandas as pd
 import time
 import timeit
@@ -93,3 +95,204 @@ df_sorted = df[['NAMA PARKIRAN', 'JENIS', 'PERIODE',
 
 print("\nData Parkiran dengan Tarif Terurut:")
 print(df_sorted.to_string(index=False))
+
+# Baris ke-2
+
+# Membuat grafik perbandingan waktu
+waktu = [avg_time_iteratif, avg_time_rekursif]
+metode = ['Iteratif', 'Rekursif']
+
+plt.bar(metode, waktu, color=['blue', 'green'])
+plt.xlabel('Metode Sorting')
+plt.ylabel('Waktu Eksekusi (detik)')
+plt.title('Perbandingan Waktu Selection Sort Iteratif dan Rekursif')
+plt.show()
+
+
+print(f"Rata-rata waktu eksekusi Selection Sort Iteratif: {avg_time_iteratif:.6f} detik")
+print(f"Rata-rata waktu eksekusi Selection Sort Rekursif: {avg_time_rekursif:.6f} detik")
+
+# Baris ke-3
+
+
+import matplotlib.pyplot as plt
+
+# Data tarif parkiran di mall
+tarif_parkiran = [
+    5000,   # Parkir Utara
+    4000,   # Parkir Selatan
+    10000,  # Parkir VIP
+    3000,   # Parkir Barat
+    4000,   # Parkir Timur
+    6000,   # Parkir Basement 1
+    2083,   # Parkir Basement 2 (konversi harian)
+    4500,   # Parkir Atap
+    3125,   # Parkir Premium (konversi harian)
+    833,    # Parkir Ekonomi (konversi harian)
+    3000,   # Parkir Khusus Motor
+    3500,   # Parkir Umum
+    1041,   # Parkir Karyawan (konversi harian)
+    2500    # Parkir Tamu
+]
+
+# Mengurutkan tarif dari terendah ke tertinggi
+tarif_terurut = sorted(tarif_parkiran)
+
+# Nama-nama parkiran di mall
+nama_parkiran = [
+    "Parkir Utara", "Parkir Selatan", "Parkir VIP", "Parkir Barat", "Parkir Timur",
+    "Parkir Basement 1", "Parkir Basement 2", "Parkir Atap", "Parkir Premium",
+    "Parkir Ekonomi", "Parkir Khusus Motor", "Parkir Umum", "Parkir Karyawan", "Parkir Tamu"
+]
+
+# Menyesuaikan urutan nama parkiran dengan tarif yang telah diurutkan
+nama_parkiran_terurut = [x for _, x in sorted(zip(tarif_parkiran, nama_parkiran))]
+
+# Membuat grafik titik untuk tarif parkiran
+plt.figure(figsize=(12, 6))
+
+# Grafik tarif dari terendah ke tertinggi
+plt.subplot(1, 2, 1)
+plt.scatter(range(len(tarif_terurut)), tarif_terurut, color='blue', label='Tarif Parkiran')
+plt.title('Tarif Parkiran dari Terendah ke Tertinggi')
+plt.xlabel('Parkiran')
+plt.ylabel('Tarif (IDR)')
+plt.xticks(range(len(tarif_terurut)), nama_parkiran_terurut, rotation=45, ha="right")
+plt.grid()
+plt.legend()
+
+# Grafik tarif dari tertinggi ke terendah
+plt.subplot(1, 2, 2)
+plt.scatter(range(len(tarif_terurut)), tarif_terurut[::-1], color='red', label='Tarif Parkiran')
+plt.title('Tarif Parkiran dari Tertinggi ke Terendah')
+plt.xlabel('Parkiran')
+plt.ylabel('Tarif (IDR)')
+plt.xticks(range(len(tarif_terurut)), nama_parkiran_terurut[::-1], rotation=45, ha="right")
+plt.grid()
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+#Baris ke-4
+
+pip install pandas
+
+# BARIS KE-5
+import pandas as pd
+import matplotlib.pyplot as plt
+import time  # Untuk mengukur waktu eksekusi
+
+# Fungsi untuk melakukan selection sort iteratif yang dioptimalkan
+def selection_sort_iteratif_optimized(arr):
+    n = len(arr)
+    start_time = time.time()  # Mulai waktu eksekusi
+    for i in range(n):
+        min_index = i
+        # Menghindari perbandingan yang tidak perlu dengan menggunakan slicing
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        # Swap hanya jika nilai minimum berbeda dengan posisi i
+        if min_index != i:
+            arr[i], arr[min_index] = arr[min_index], arr[i]  # Swap
+    iteratif_time = time.time() - start_time  # Waktu eksekusi iteratif
+    return arr, iteratif_time
+
+# Fungsi untuk melakukan selection sort rekursif
+def selection_sort_rekursif(arr, n=None, index=0):
+    if n is None:
+        n = len(arr)
+
+    # Basis kasus
+    if index == n - 1:
+        return arr
+
+    # Mencari indeks elemen terkecil
+    min_index = index
+    for j in range(index + 1, n):
+        if arr[j] < arr[min_index]:
+            min_index = j
+
+    # Swap elemen terkecil dengan elemen saat ini
+    arr[index], arr[min_index] = arr[min_index], arr[index]
+
+    # Rekursi untuk elemen berikutnya
+    return selection_sort_rekursif(arr, n, index + 1)
+
+# Fungsi untuk mendapatkan input tarif parkiran dari pengguna
+def input_tarif_parkiran():
+    tarif_parkiran = []
+    while True:
+        try:
+            tarif = input("Masukkan tarif parkiran (atau ketik 'selesai' untuk mengakhiri): ")
+            if tarif.lower() == 'selesai':
+                break
+            tarif_parkiran.append(int(tarif))
+        except ValueError:
+            print("Silakan masukkan angka yang valid.")
+    return tarif_parkiran
+
+# Mengambil input tarif parkiran dari pengguna
+tarif_parkiran = input_tarif_parkiran()
+
+# Memeriksa apakah ada data yang dimasukkan
+if not tarif_parkiran:
+    print("Tidak ada data tarif parkiran yang dimasukkan.")
+else:
+    # Mengukur waktu eksekusi untuk selection sort iteratif yang dioptimalkan
+    sorted_iteratif, iteratif_time = selection_sort_iteratif_optimized(tarif_parkiran.copy())
+
+    # Mengukur waktu eksekusi untuk selection sort rekursif
+    start_time = time.time()
+    sorted_rekursif = selection_sort_rekursif(tarif_parkiran.copy())
+    rekursif_time = time.time() - start_time
+
+    # Menampilkan tabel hasil
+    data = {
+        'Tarif Parkiran (Input)': tarif_parkiran,
+        'Sorted Iteratif': sorted_iteratif,
+        'Waktu Iteratif (detik)': [iteratif_time] * len(tarif_parkiran),  # Mengulang waktu iteratif untuk setiap indeks
+        'Sorted Rekursif': sorted_rekursif,
+        'Waktu Rekursif (detik)': [rekursif_time] * len(tarif_parkiran)  # Mengulang waktu rekursif untuk setiap indeks
+    }
+
+    # Membuat DataFrame dari pandas
+    df = pd.DataFrame(data)
+    print("\nTabel Tarif Parkiran:")
+    print(df)
+
+    # Menampilkan waktu eksekusi
+    print(f"\nWaktu eksekusi untuk selection sort iteratif : {iteratif_time:.6f} detik")
+    print(f"Waktu eksekusi untuk selection sort rekursif: {rekursif_time:.6f} detik")
+
+    # Membuat grafik untuk tarif yang diurutkan
+    plt.figure(figsize=(10, 5))
+
+    # Grafik dari tarif yang diurutkan secara iteratif
+    plt.subplot(1, 2, 1)
+    plt.scatter(range(len(sorted_iteratif)), sorted_iteratif, color='blue', label='Tarif Parkiran', zorder=2)
+    plt.plot(range(len(sorted_iteratif)), sorted_iteratif, color='blue', alpha=0.5, zorder=1)  # Garis penghubung
+    plt.title('Tarif Parkiran (Sorted Iteratif)')
+    plt.xlabel('Indeks')
+    plt.ylabel('Tarif (IDR)')
+    plt.xticks(range(len(sorted_iteratif)), [f'Parkiran {i+1}' for i in range(len(sorted_iteratif))], rotation=45)
+    plt.grid()
+    plt.legend()
+
+    # Grafik dari tarif yang diurutkan secara rekursif
+    plt.subplot(1, 2, 2)
+    plt.scatter(range(len(sorted_rekursif)), sorted_rekursif, color='red', label='Tarif Parkiran', zorder=2)
+    plt.plot(range(len(sorted_rekursif)), sorted_rekursif, color='red', alpha=0.5, zorder=1)  # Garis penghubung
+    plt.title('Tarif Parkiran (Sorted Rekursif)')
+    plt.xlabel('Indeks')
+    plt.ylabel('Tarif (IDR)')
+    plt.xticks(range(len(sorted_rekursif)), [f'Parkiran {i+1}' for i in range(len(sorted_rekursif))], rotation=45)
+    plt.grid()
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+
